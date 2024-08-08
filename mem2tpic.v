@@ -8,38 +8,38 @@
  */
 module mem2tpic
   #(parameter WIDTH = 16)(
-    input reset,
-    input clk,
-    input [WIDTH-1:0]data,
-    output reg sclk, 
-    output reg clr_n,
-    output reg rck,
-    output sout
+  input clk,
+  input reset,
+  input [WIDTH-1:0]data,
+  output reg sclk,
+  output reg en_n,
+  output reg rck,
+  output sout
 );
   
-  reg [7:0]bit_index = 0; // 0..15
+  reg [31:0]bit_index = 0; // 0..WIDTH-1
   reg [WIDTH-1:0]shift_reg = 8'h00;
   reg [1:0]state = 0;
   
-  parameter S_START =  2'h0;
-  parameter S_TX    =  2'h1;
-  parameter S_CLK   =  2'h2;
-  parameter S_WR    =  2'h3;
+  localparam S_START =  2'h0;
+  localparam S_TX    =  2'h1;
+  localparam S_CLK   =  2'h2;
+  localparam S_WR    =  2'h3;
   assign sout = shift_reg[0];
   
   always @ (posedge clk or posedge reset) begin
   if(reset) begin
     sclk <= 1'b0;
-    clr_n <= 1'h0;
+    en_n <= 1'h1;
     rck <= 1'b0;
-    bit_index <= 7'h0;
-    shift_reg = 8'h00;
+    bit_index <= 32'd0;
+    shift_reg = {WIDTH{1'b0}};
     state <= S_START;
   end else begin
     case(state)
       S_START: begin
         sclk <= 1'b1;
-        clr_n <= 1'h1;
+        en_n <= 1'b0;
         rck <= 1'b0;
         shift_reg <= data;
         state <= S_TX;
@@ -71,16 +71,17 @@ endmodule
 
 `timescale 10ps/1ps
 module mem2tpic_tb();
-  reg clk, rst;
-  reg [15:0]data;
-  wire sclk, clr_n, rck, sdata;
+  localparam WIDTH = 300;
+  reg clk, rst, en_n;
+  reg [WIDTH-1:0]data;
+  wire sclk, rck, sdata;
   integer i;
-  mem2tpic #(.WIDTH(8)) uut (.reset(rst), .clk(clk), .data(data), .sclk(sclk), .clr_n(clr_n), .rck(rck), .sout(sdata));
+  mem2tpic #(.WIDTH(WIDTH)) uut (.reset(rst), .clk(clk), .data(data), .sclk(sclk), .en_n(en_n), .rck(rck), .sout(sdata));
   initial begin
-    #1 clk = 0;
+    #1 clk = 0; en_n = 0;
     #1 rst = 1; #1 rst = 0;
     #1 data = 16'hAAAA;
-    for(i = 0; i < 100; i=i+1)
+    for(i = 0; i < 3000; i=i+1)
       #1 clk = ~clk;
   end
 endmodule

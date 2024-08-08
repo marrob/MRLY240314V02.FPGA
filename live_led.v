@@ -1,23 +1,33 @@
 //clk:PIN_23, led: PIN_87
 //led_blink.v
-module live_led(input clk, output reg led);
-  reg[24:0]cnt = 25'd0;
-  always@(posedge clk) begin
-    cnt<=cnt + 25'd1;
-    if(cnt == 25'd25000000)begin
-      led <=~led;
-      cnt <= 25'd0;
+module live_led(
+  input clk,
+  input reset,
+  output reg led
+);
+  reg[24:0]cnt;
+  
+  always@(posedge clk or posedge reset)
+    if(reset)begin 
+      cnt = 0;
+      led = 0;
+    end else begin
+      cnt<=cnt + 25'd1;
+      if(cnt == 25'd9)begin
+        led <=~led;
+        cnt <= 25'd0;
+      end
     end
-  end
 endmodule
 
 
 `timescale 10ps/1ps
 module live_led_tb();
-  reg clk;
+  reg clk, reset;
   wire led;
   integer i;
-  live_led uut(.clk(clk), .led(led));
+  
+  live_led uut(.reset(reset), .clk(clk), .led(led));
   initial begin
     clk = 1'd0;
     for(i=0; i<10; i = i + 1)
