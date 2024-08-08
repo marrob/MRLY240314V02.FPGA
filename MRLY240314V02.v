@@ -211,9 +211,7 @@ module slu_read_card_type_tb();
    .slu_strobe(slu_strobe),
    .slu_address(slu_address),
    .slu_data_bus(slu_data_bus),
-   
-   
-   .diag_byps(diag_byps)   //High: A TPIC - uC bypass funkicójának engedélyezése
+   .diag_byps(diag_byps)
 );
 
   assign slu_data_bus = data_bus_drv_en ? data_bus_out : 8'hZZ;
@@ -241,3 +239,6 @@ endmodule
 
 
 // UUT az SLU olvasásra és írásra
+
+module slu_write_a_byte_tb();
+
