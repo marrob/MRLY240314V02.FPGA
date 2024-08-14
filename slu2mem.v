@@ -20,10 +20,10 @@ module slu2mem
     //FPGA Write To Data Bus
     else if(rw_n) begin
       case (address)
-        8'h00: data_bus_out =  8'h38;         //Card Type + 0h
-        8'h01: data_bus_out =  8'h0F;         //Card Confiugration + 1h
-        8'h02: data_bus_out =  memory[23:16]; //Status and Control + 2h
-        default data_bus_out = 8'hFF;
+        8'h00: data_bus_out =  8'h43;                     //Card Type + 0h - Ez a Keysight E8782A Instruments Matrix Card
+        8'h01: data_bus_out =  8'h0F;                     //Card Confiugration + 1h
+        8'h02: data_bus_out =  memory[23:16];             //Status and Control + 2h
+        default data_bus_out = memory[address * 8 +: 8];  //ezzel a fenmaradó területet lehet olvasni bájtos címzéssel
       endcase
     end
     //FPGA Read From Bus

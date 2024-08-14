@@ -33,7 +33,7 @@ module mem2tpic
     en_n <= 1'h1;
     rck <= 1'b0;
     bit_index <= 32'd0;
-    shift_reg = {WIDTH{1'b0}};
+    shift_reg = 32'h5555; //{WIDTH{1'b0}};
     state <= S_START;
   end else begin
     case(state)

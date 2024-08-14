@@ -81,9 +81,6 @@ endmodule
 `timescale 10ps/1ps
 /*
  * A mem2tpic mükdését ellenörzi.
- * 
- *
- *
  */
 module MRLY240314V02_tpic_clk_tb();
   reg  slu_reset, clk, diag_byps;
@@ -232,6 +229,13 @@ module slu_read_card_type_tb();
       slu_address = 8'h00;  //0x00 Card Type olvasása
    #1 slu_strobe = 1;
    #1 slu_strobe = 0;
+   
+   if(slu_data_bus == 8'h43)
+    $display("PASSED");
+   else
+    $display("FAILED");
+   
+   
 
   end
   
@@ -242,3 +246,63 @@ endmodule
 
 module slu_write_a_byte_tb();
 
+  reg  slu_reset,
+       clk,
+       slu_rw_n,
+       slu_strobe,
+       diag_byps,
+       data_bus_drv_en;
+  reg  [7:0]data_bus_out;
+  reg  [7:0]slu_address;
+  
+  wire [7:0] slu_data_bus;
+  
+    MRLY240314V02 uut(
+   .clk(clk), 
+   .slu_reset(slu_reset),
+   .slu_rw_n(slu_rw_n),
+   .slu_strobe(slu_strobe),
+   .slu_address(slu_address),
+   .slu_data_bus(slu_data_bus),
+   .diag_byps(diag_byps)
+);
+
+  assign slu_data_bus = data_bus_drv_en ? data_bus_out : 8'hZZ;
+  
+  initial begin
+      clk = 0;
+      diag_byps = 0;
+      data_bus_drv_en = 0;
+      slu_reset = 0;
+      slu_strobe = 0;
+      slu_rw_n = 0;
+      slu_address = 8'h00;
+
+   #1 slu_reset = 1;
+   #1 slu_reset = 0;
+   
+   //beírás az FPGA "memory" változójába
+   #1 slu_rw_n = 0;         //FPGA olvas a buszról
+      slu_address = 8'h03;  //
+      data_bus_drv_en = 1;  //engedélyezi a buszra írást
+      data_bus_out = 8'h55; //0x55 adok a 0x03-as címre ezt az értéket fogja az FPGA beolvasni
+      
+   #1 slu_strobe = 1;
+   #1 slu_strobe = 0;
+      data_bus_drv_en = 0;
+      slu_address = 8'h00;
+   
+   //a beírt változót kiolvasom
+   #1 slu_rw_n = 1;         //FPGA ír memory-ból kiválaszott bájt értékét írja a buszra
+      slu_address = 8'h03;
+   #1 slu_strobe = 1;
+   #1 slu_strobe = 0;
+   
+   if(slu_data_bus == 8'h55)
+    $display("PASSED; A beírt érték egyezik a kiolvasott értékkel.");
+   else
+    $display("FAILED;");
+
+  end
+
+endmodule

@@ -5,17 +5,17 @@ module live_led(
   input reset,
   output reg led
 );
-  reg[24:0]cnt;
+  reg[25:0]cnt;
   
   always@(posedge clk or posedge reset)
     if(reset)begin 
       cnt = 0;
       led = 0;
     end else begin
-      cnt<=cnt + 25'd1;
-      if(cnt == 25'd9)begin
+      cnt<=cnt + 26'd1;
+      if(cnt == 26'd50000000)begin
         led <=~led;
-        cnt <= 25'd0;
+        cnt <= 26'd0;
       end
     end
 endmodule
