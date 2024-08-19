@@ -1,6 +1,8 @@
+`timescale 10ps/1ps
 //clk:PIN_23, led: PIN_87
 //led_blink.v
-module live_led(
+module live_led
+#(parameter COUNT_UP_TO = 26'd25000000)(
   input clk,
   input reset,
   output reg led
@@ -13,15 +15,14 @@ module live_led(
       led = 0;
     end else begin
       cnt<=cnt + 26'd1;
-      if(cnt == 26'd50000000)begin
+      if(cnt == COUNT_UP_TO)begin
         led <=~led;
         cnt <= 26'd0;
       end
     end
 endmodule
 
-
-`timescale 10ps/1ps
+//--- Unit Tests --------------------------------------------------------------
 module live_led_tb();
   reg clk, reset;
   wire led;

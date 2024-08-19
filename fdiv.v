@@ -1,3 +1,4 @@
+`timescale 10ps/1ps
 module fdiv 
   #( parameter DIVISOR = 2 )(
   input wire clk_in,
@@ -21,3 +22,5 @@ module fdiv
     end
   end
 endmodule
+
+//--- Unit Tests --------------------------------------------------------------

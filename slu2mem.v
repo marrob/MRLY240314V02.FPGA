@@ -1,3 +1,4 @@
+`timescale 10ps/1ps
 module slu2mem
   #(parameter WIDTH = 16)(
   input reset,              //Reset actív when: High
@@ -35,8 +36,8 @@ module slu2mem
 endmodule
 
 
-`timescale 100ps/10ps
-module slu2mem_tb();
+//--- Unit Tests --------------------------------------------------------------
+module slu2mem__slu2mem_tb();
   reg reset, strobe, rw_n, drv_en;
   reg [7:0]addr;
   wire [7:0]data_bus;
