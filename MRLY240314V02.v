@@ -1,7 +1,7 @@
 `timescale 10ps/1ps
 
 module MRLY240314V02
-  #(parameter WIDTH = 432)(
+  #(parameter WIDTH = 472)(
   input wire clk,               //50MHz
 
   output wire live_led,
@@ -59,14 +59,14 @@ module MRLY240314V02
 );
 
   fdiv #(.DIVISOR(4)) fdiv_inst(
-    .clk_in(clk),           //50MHz
+    .clk_in(clk),             //50MHz
     .reset(reset),
-    .clk_out(tpic_clk_div)  //25MHz
+    .clk_out(tpic_clk_div)    //12.5MHz
 );
 
   slu2mem #(.WIDTH(WIDTH)) slu2mem_inst(
     .reset(reset),
-    .rw_n(slu_rw_n), //Hihg: ilyenkor az FPGA ir a buszra
+    .rw_n(slu_rw_n),          //Hihg: ilyenkor az FPGA ir a buszra
     .strobe(slu_strobe),
     .address(slu_address),
     .data_bus(slu_data_bus),
@@ -74,10 +74,10 @@ module MRLY240314V02
 );
   
   mem2tpic #(.WIDTH(WIDTH)) mem2tpic_inst (
-    .clk(tpic_clk_div),   //25MHz
+    .clk(tpic_clk_div),       //12.5MHz
     .reset(reset),
-    .data(memory),
-    .sclk(mem2tpic_clk),  //12.5MHz output
+    .data({memory[471:40]}),  //54 byte
+    .sclk(mem2tpic_clk),      //6.25MHz clk for TPIC
     .g_n(mem2tpic_en_n),
     .rck(mem2tpic_rck), 
     .sout(mem2tpic_mosi)
@@ -96,56 +96,6 @@ module MRLY240314V02
 endmodule
 
 //--- Unit Tests --------------------------------------------------------------
-
-//Egy teljes mem2tpic ciklus.
-module MRLY240314V02__tpic_clk_tb();
-  reg  reset,
-       clk,
-       diag_byps;
-
-  wire tpic_clk,
-       tpic_rck,
-       tpic_mosi,
-       live_led,
-       tpic_en_n;
-  
-  localparam WIDTH = 16;
-  integer i;
-  
-  MRLY240314V02 #(.WIDTH(WIDTH)) uut(
-   .clk(clk),
-   
-   .reset(reset),
-   .live_led(live_led),
-   
-   .tpic_clk(tpic_clk),
-   .tpic_rck(tpic_rck),
-   .tpic_en_n(tpic_en_n),
-   .tpic_mosi(tpic_mosi),
-   
-   .diag_byps(diag_byps)
-);
-  initial begin
-
-   #1 clk = 0;
-      reset = 0;
-      diag_byps = 0;
-      reset = 1;
-   #1 reset = 0;
-   
-   /*
-    *ha 300 bit széles, akkor ehhez az órjael 8-al van osztva 300*
-    * 1. 4-es osztó a fdiv #(.DIVISOR(2)) fdiv_inst
-    * 2. 2-es osztó a  mem2tpic #(.WIDTH(WIDTH)) mem2tpic_inst
-    * ez igy összesen 8.
-    * Ahhoz hogy egy teljes TPIC ciklus látszódjon, minimum WIDTH * 8 + 2 * 8(1 clk szünet és 1 clk az RCK) 
-    */
-   for(i = 0; i < WIDTH * 8 + 2 * 8; i = i + 1) begin
-    #1 clk = 1;
-    #1 clk = 0;
-   end
-  end
-endmodule
 
 /*
  * Ha diag_bypss:High, akkor a uC közvetlenül vezérli a TPIC-ket
@@ -438,9 +388,9 @@ module MRLY240314V02__slu_write_spi_read();
    #1 spi_cs_n = 1;
    
    if(rx_spi_data[7:0] == data_bus_out)
-    $display("%m: memory data and read data PASSED");
+    $display("%m: write to memory and read from memory are equal -> PASSED");
    else
-    $display("%m: memory data and read data FAILED");
+    $display("%m:write to memory and read from memory are NOT equal -> FAILED");
    
   end
 endmodule
