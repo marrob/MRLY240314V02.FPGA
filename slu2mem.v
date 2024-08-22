@@ -11,9 +11,12 @@ module slu2mem
   reg [7:0]data_bus_out;
   assign data_bus = rw_n ? data_bus_out : 8'hZZ; //Hihg: ilyenkor az FPGA ir a buszra
 
-  always @(posedge strobe or posedge reset ) begin
-    if(reset)begin 
+  always @(posedge strobe or posedge reset)
+  begin
+    if(reset)
+    begin 
       data_bus_out = 8'h00;
+      memory = {WIDTH{1'b0}};
       memory[7:0] =   8'h43; //Card Type 0x00 - Ez a Keysight E8782A Instruments Matrix Card
       memory[15:8] =  8'h0F; //Card Confiugration  0x01
       memory[23:16] = 8'h00; //Status and Control  0x02

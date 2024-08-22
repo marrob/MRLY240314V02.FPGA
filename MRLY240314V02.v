@@ -84,8 +84,8 @@ module MRLY240314V02
 );
 
   mem2spi_slave #(.WIDTH(WIDTH)) spi_slave_inst  (
-    .clk(diag_clk), //Az SPI master eszköz órajele 
     .reset(reset),
+    .spi_clk(diag_clk),
     .cs_n(diag_cs_n),
     .mosi(diag_mosi),
     .miso(spi_miso),
@@ -394,3 +394,77 @@ module MRLY240314V02__slu_write_spi_read();
    
   end
 endmodule
+
+
+module MRLY240314V02__read_card_type_over_spi();
+
+  reg  reset,
+       diag_byps,
+       spi_clk,
+       spi_cs_n,
+       spi_mosi;
+       
+  wire spi_miso;
+  reg [7:0] vector = 8'h0;
+
+  parameter WIDTH = 472;
+  
+  reg  [WIDTH - 1:0]result_memory;
+    
+  integer  i = 0,
+           bit_idx = 0;
+   
+  MRLY240314V02 uut(
+   .reset(reset),
+   
+   .diag_byps(diag_byps),
+   
+   //az FPGA a SPI slave
+   .diag_clk(spi_clk),
+   .diag_cs_n(spi_cs_n),
+   .diag_miso(spi_miso),
+   .diag_mosi(spi_mosi)
+);
+
+  initial begin
+     $monitor("reserved vector %02h", vector);
+     
+   #1 reset = 1;
+      diag_byps = 0;
+      spi_cs_n = 1;
+      spi_clk = 0;
+      spi_mosi = 0;
+
+      result_memory = {WIDTH-1{1'b0}};
+    
+   #1 reset = 0;
+   #1 reset = 1;
+   #1 reset = 0;
+   
+   #1 spi_cs_n = 0;
+   #1 spi_cs_n = 1;
+
+
+   #1 spi_cs_n = 0;
+      for(bit_idx = 0; bit_idx < WIDTH; bit_idx = bit_idx + 1)
+      begin
+       #1 spi_clk = 1;
+          result_memory[bit_idx] = spi_miso;
+       #1 spi_clk = 0;
+      end
+   #1 spi_cs_n = 1;
+
+     for(i = 0; i < 59; i = i + 1)
+      $display("%02h", result_memory[i * 8 +: 8]);
+     
+      vector = result_memory[WIDTH - 1 : WIDTH - 8]; //471...464 az utolsó bájt fordított sorrendben
+
+    if(vector == 8'hC2)
+      $display ("%m Read Card Type is %08h PASSED", vector);
+    else
+      $display ("%m Read Card Type is %08h FAILED", vector);
+
+  end
+endmodule
+
+
