@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE6E22) Path("D:/@@@!ProjectS/_Verilog/MRLY240314V02.FPGA/output_files/") File("MRLY240314V02.sof") MfrSpec(OpMask(1));
+		Device PartName(EP4CE6) Path("D:/@@@!ProjectS/_Verilog/MRLY240314V02.FPGA/output_files/") File("MRLY240314V02_24xxxxxxx.jic") MfrSpec(OpMask(1) SEC_Device(EPCS16) Child_OpMask(1 3));
 
 ChainEnd;
 

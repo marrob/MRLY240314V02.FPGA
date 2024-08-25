@@ -15,12 +15,13 @@ module mem2spi_slave
   
   always @(negedge spi_clk or posedge cs_n or posedge reset)
   if (reset)
-    data_shift <= { WIDTH-1{1'b0}};
+    data_shift <= { WIDTH{1'b0}};
   else
   if(cs_n)
      data_shift <= memory;
   else
     data_shift <= data_shift << 1;
+    
 
 endmodule
 

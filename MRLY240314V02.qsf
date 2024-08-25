@@ -58,7 +58,7 @@ set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_global_assignment -name USE_CONFIGURATION_DEVICE ON
 set_global_assignment -name CRC_ERROR_OPEN_DRAIN OFF
-set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.3-V LVTTL"
+set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "3.0-V LVCMOS"
 set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -rise
 set_global_assignment -name OUTPUT_IO_TIMING_NEAR_END_VMEAS "HALF VCCIO" -fall
 set_global_assignment -name OUTPUT_IO_TIMING_FAR_END_VMEAS "HALF SIGNAL SWING" -rise
@@ -118,7 +118,6 @@ set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME MRLY240314V02__slu_write_
 set_location_assignment PIN_103 -to reset
 set_location_assignment PIN_52 -to diag_cs_n
 set_global_assignment -name CYCLONEIII_CONFIGURATION_DEVICE EPCS16
-set_global_assignment -name CONFIGURATION_VCCIO_LEVEL 3.3V
 set_global_assignment -name EDA_TEST_BENCH_NAME slu2mem__basics_tb -section_id eda_simulation
 set_global_assignment -name EDA_DESIGN_INSTANCE_NAME NA -section_id slu2mem__basics_tb
 set_global_assignment -name EDA_TEST_BENCH_MODULE_NAME slu2mem__basics_tb -section_id slu2mem__basics_tb
@@ -143,4 +142,64 @@ set_global_assignment -name EDA_TEST_BENCH_FILE MRLY240314V02.v -section_id MRLY
 set_global_assignment -name EDA_TEST_BENCH_FILE slu2mem.v -section_id slu2mem__basics_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE mem2spi_slave.v -section_id mem2spi_slave__basics_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE MRLY240314V02.v -section_id MRLY240314V02__read_card_type_over_spi
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to clk
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_strobe
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_rw_n
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_address[0]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_address[1]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_address[2]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_address[4]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_address[3]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_address[5]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_address[6]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_address[7]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to reset
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to diag_rck
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to diag_mosi
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to diag_en_n
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to diag_clk
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to diag_cs_n
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to diag_byps
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_data_bus[0]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_data_bus[1]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_data_bus[2]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_data_bus[3]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_data_bus[5]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_data_bus[6]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_data_bus[7]
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to slu_data_bus[4]
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to tpic_rck
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to tpic_mosi
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to tpic_en_n
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to tpic_clk
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to live_led
+set_instance_assignment -name CURRENT_STRENGTH_NEW "MAXIMUM CURRENT" -to diag_miso
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to tpic_rck
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to tpic_mosi
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to tpic_en_n
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to tpic_clk
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to live_led
+set_instance_assignment -name IO_STANDARD "3.0-V LVCMOS" -to diag_miso
+set_instance_assignment -name SLEW_RATE 1 -to tpic_rck
+set_instance_assignment -name SLEW_RATE 1 -to tpic_mosi
+set_instance_assignment -name SLEW_RATE 1 -to tpic_en_n
+set_instance_assignment -name SLEW_RATE 1 -to live_led
+set_instance_assignment -name SLEW_RATE 1 -to tpic_clk
+set_instance_assignment -name SLEW_RATE 1 -to diag_miso
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to slu_data_bus[0]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to slu_data_bus[1]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to slu_data_bus[2]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to slu_data_bus[3]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to slu_data_bus[4]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to slu_data_bus[5]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to slu_data_bus[6]
+set_instance_assignment -name CURRENT_STRENGTH_NEW 8MA -to slu_data_bus[7]
+set_instance_assignment -name SLEW_RATE 1 -to slu_data_bus[0]
+set_instance_assignment -name SLEW_RATE 1 -to slu_data_bus[1]
+set_instance_assignment -name SLEW_RATE 1 -to slu_data_bus[2]
+set_instance_assignment -name SLEW_RATE 1 -to slu_data_bus[3]
+set_instance_assignment -name SLEW_RATE 1 -to slu_data_bus[4]
+set_instance_assignment -name SLEW_RATE 1 -to slu_data_bus[5]
+set_instance_assignment -name SLEW_RATE 1 -to slu_data_bus[6]
+set_instance_assignment -name SLEW_RATE 1 -to slu_data_bus[7]
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
