@@ -73,7 +73,7 @@ module MRLY240314V02
     .memory(memory)
 );
   
-  mem2tpic #(.WIDTH(WIDTH)) mem2tpic_inst (
+  mem2tpic #(.WIDTH(54 * 8)) mem2tpic_inst ( //az elso 6 regisztert nem kell kuldnei a TPIC lanc-ba
     .clk(tpic_clk_div),       //12.5MHz
     .reset(reset),
     .data({memory[471:40]}),  //54 byte
@@ -88,7 +88,6 @@ module MRLY240314V02
     .clk(clk),             //50MHz
     .spi_clk(diag_clk),
     .cs_n(diag_cs_n),
-   // .mosi(diag_mosi),
     .miso(spi_miso),
     .memory(memory)
 );

@@ -67,6 +67,10 @@ set_clock_uncertainty -rise_from [get_clocks {slu_strobe}] -rise_to [get_clocks 
 set_clock_uncertainty -rise_from [get_clocks {slu_strobe}] -fall_to [get_clocks {slu_strobe}]  0.020  
 set_clock_uncertainty -rise_from [get_clocks {slu_strobe}] -rise_to [get_clocks {diag_cs_n}]  0.040  
 set_clock_uncertainty -rise_from [get_clocks {slu_strobe}] -fall_to [get_clocks {diag_cs_n}]  0.040  
+
+set_clock_uncertainty -rise_from [get_clocks {slu_strobe}] -rise_to [get_clocks {clk}]  0.040  
+set_clock_uncertainty -rise_from [get_clocks {slu_strobe}] -fall_to [get_clocks {clk}]  0.040  
+
 set_clock_uncertainty -rise_from [get_clocks {slu_strobe}] -rise_to [get_clocks {fdiv:fdiv_inst|clk_out}]  0.030  
 set_clock_uncertainty -rise_from [get_clocks {slu_strobe}] -fall_to [get_clocks {fdiv:fdiv_inst|clk_out}]  0.030  
 set_clock_uncertainty -fall_from [get_clocks {slu_strobe}] -rise_to [get_clocks {diag_clk}]  0.030  
@@ -89,6 +93,15 @@ set_clock_uncertainty -rise_from [get_clocks {diag_cs_n}] -rise_to [get_clocks {
 set_clock_uncertainty -rise_from [get_clocks {diag_cs_n}] -fall_to [get_clocks {diag_clk}]  0.030  
 set_clock_uncertainty -fall_from [get_clocks {diag_cs_n}] -rise_to [get_clocks {diag_clk}]  0.030  
 set_clock_uncertainty -fall_from [get_clocks {diag_cs_n}] -fall_to [get_clocks {diag_clk}]  0.030  
+
+set_clock_uncertainty -fall_from [get_clocks {diag_cs_n}] -rise_to [get_clocks {clk}]  0.030  
+set_clock_uncertainty -fall_from [get_clocks {diag_cs_n}] -fall_to [get_clocks {clk}]  0.030 
+set_clock_uncertainty -rise_from [get_clocks {diag_cs_n}] -rise_to [get_clocks {clk}]  0.030 
+
+set_clock_uncertainty -fall_from [get_clocks {diag_clk}] -rise_to [get_clocks {clk}]  0.030  
+set_clock_uncertainty -fall_from [get_clocks {diag_clk}] -fall_to [get_clocks {clk}]  0.030 
+set_clock_uncertainty -rise_from [get_clocks {diag_clk}] -rise_to [get_clocks {clk}]  0.030 
+
 set_clock_uncertainty -rise_from [get_clocks {fdiv:fdiv_inst|clk_out}] -rise_to [get_clocks {clk}]  0.030  
 set_clock_uncertainty -rise_from [get_clocks {fdiv:fdiv_inst|clk_out}] -fall_to [get_clocks {clk}]  0.030  
 set_clock_uncertainty -rise_from [get_clocks {fdiv:fdiv_inst|clk_out}] -rise_to [get_clocks {fdiv:fdiv_inst|clk_out}]  0.020  
