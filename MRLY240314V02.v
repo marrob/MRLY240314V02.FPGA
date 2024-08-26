@@ -85,9 +85,10 @@ module MRLY240314V02
 
   mem2spi_slave #(.WIDTH(WIDTH)) spi_slave_inst  (
     .reset(reset),
+    .clk(clk),             //50MHz
     .spi_clk(diag_clk),
     .cs_n(diag_cs_n),
-    .mosi(diag_mosi),
+   // .mosi(diag_mosi),
     .miso(spi_miso),
     .memory(memory)
 );
