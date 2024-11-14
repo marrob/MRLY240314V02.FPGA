@@ -2,7 +2,7 @@
 <cof>
 	<eprom_name>EPCS16</eprom_name>
 	<flash_loader_device>EP4CE6</flash_loader_device>
-	<output_filename>output_files/MRLY240314V02_24xxxxxxx.jic</output_filename>
+	<output_filename>output_files/MRLY240314V02.jic</output_filename>
 	<n_pages>1</n_pages>
 	<width>1</width>
 	<mode>7</mode>
@@ -17,6 +17,5 @@
 	<create_cvp_file>0</create_cvp_file>
 	<auto_create_rpd>0</auto_create_rpd>
 	<options>
-		<map_file>1</map_file>
 	</options>
 </cof>

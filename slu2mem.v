@@ -8,26 +8,67 @@ module slu2mem
   inout [7:0] data_bus,
   output reg [WIDTH-1:0] memory
 );
-  reg [7:0]data_bus_out;
+  reg [7:0] data_bus_out;
+  reg [7:0] abus_ctrl;
   assign data_bus = rw_n ? data_bus_out : 8'hZZ; //Hihg: ilyenkor az FPGA ir a buszra
-
+  
   always @(posedge strobe or posedge reset)
   begin
     if(reset)
     begin 
       data_bus_out = 8'h00;
       memory = {WIDTH{1'b0}};
-      memory[7:0] =   8'h43; //Card Type 0x00 - Ez a Keysight E8782A Instruments Matrix Card
-      memory[15:8] =  8'h0F; //Card Confiugration  0x01
-      memory[23:16] = 8'h00; //Status and Control  0x02
-      memory[31:24] = 8'h55; //Not used 0x03
-      memory[39:32] = 8'hAA; //Not used 0x04
+      memory[7:0] =   8'h43; //0x00 Card Type 0x00 - Ez a Keysight E8782A Instruments Matrix Card
+      memory[15:8] =  8'h0F; //0x01 Card Confiugration
+      memory[23:16] = 8'h80; //0x02 Status and Control
+      memory[31:24] = 8'h55; //0x03 Not used 0x03
       
-      memory[47:40] = 8'h01; //Protection bypass relay 0x05
+      memory[39:32] = 8'hF0; //0x04 Abus control and protection bypass relay (Dissconnect Relék, default bekapcsoltak)
+      abus_ctrl = 8'hF0;
+      
+      memory[47:40] = 8'hAA; //0x05 Not Used
     end else if(rw_n)
       data_bus_out = memory[address * 8 +: 8];
     else
-      memory[address * 8 +: 8] <= data_bus;   //FPGA Read From Bus - SLU Write
+    begin
+      if(address == 8'h00)
+      ;//0x00 regiszter csak olvasható itt van az eszköz címe
+      else
+      if(address == 8'h02)
+      begin
+        
+        memory[19:17] <= data_bus[3:1]; //DAC2Rly, DAC1Rly, GndRly
+        
+        if(data_bus & 8'h40)
+        begin
+          memory[23:16] <= memory[23:16] | 8'h40; // csak beállítani lehet
+        end //if(data_bus & 8'h40)
+        
+        if((data_bus & 8'h20) || (data_bus & 8'h01))//OAR (Open All Relays) vagy a Reseteli a relé láncot
+        begin
+          memory[23:16] <= 8'h80;
+          memory[39:32] <= 8'hF0;
+          memory[WIDTH-1:48] <= 0;
+        end //if(data_bus & 8'h20)
+      end //if(address == 8'h02)
+      else
+      if(address == 8'h04)
+      begin
+       abus_ctrl = data_bus;
+       if(memory[23:16] & 8'h40) //DCE - Disconnect Control Enable
+          memory[39:32] = abus_ctrl;//Enabled
+        else
+          memory[39:32] = abus_ctrl | 8'hF0; //Disabled
+      end //if(address == 8'h04)
+      else 
+      begin
+        if(memory[23:16] & 8'h40) //DCE Upadate
+          memory[39:32] = abus_ctrl;
+        else
+          memory[39:32] = abus_ctrl | 8'hF0;
+          memory[address * 8 +: 8] <= data_bus; //FPGA Read From Bus - SLU Write
+      end
+    end
   end
 
 endmodule

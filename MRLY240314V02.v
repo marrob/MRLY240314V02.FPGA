@@ -1,7 +1,7 @@
 `timescale 10ps/1ps
 
 module MRLY240314V02
-  #(parameter WIDTH = 472)(
+  #(parameter WIDTH = 472)(     //59x8bit byte, ennyi a teljes memória szélessége
   input wire clk,               //50MHz
 
   output wire live_led,
@@ -9,6 +9,10 @@ module MRLY240314V02
   //output wire slu_busy,       //ToDo
   //output wire slu_slot_n,     //ToDo High: nincs kiválaszva a kártya
 
+  output wire rly_dac1,
+  output wire rly_dac2,
+  output wire rly_gnd,
+  
   input wire reset,             //slu_reset 
   input wire slu_strobe,
   input wire slu_rw_n,          //High: ilyenkor az FPGA ir a buszra
@@ -51,7 +55,11 @@ module MRLY240314V02
   assign tpic_rck = diag_byps ? diag_rck : mem2tpic_rck;
   assign diag_miso = diag_byps ? tpic_miso : spi_miso;
   assign tpic_en_n = diag_byps ? diag_en_n :mem2tpic_en_n;
-  
+
+  assign rly_gnd = memory[17];
+  assign rly_dac1 = memory[18];
+  assign rly_dac2 = memory[19];
+
   live_led live_inst(
     .reset(reset),
     .clk(clk),
@@ -73,10 +81,10 @@ module MRLY240314V02
     .memory(memory)
 );
   
-  mem2tpic #(.WIDTH(54 * 8)) mem2tpic_inst ( //az elso 6 regisztert nem kell kuldnei a TPIC lanc-ba
+  mem2tpic #(.WIDTH(55 * 8)) mem2tpic_inst ( //az elso 4 bájt értékét nem kell kuldnei a TPIC lanc-ba
     .clk(tpic_clk_div),       //12.5MHz
     .reset(reset),
-    .data({memory[471:40]}),  //54 byte
+    .data({memory[471:32]}),  //55 byte + 4 bájt offszettel
     .sclk(mem2tpic_clk),      //6.25MHz clk for TPIC
     .g_n(mem2tpic_en_n),
     .rck(mem2tpic_rck), 
@@ -92,6 +100,13 @@ module MRLY240314V02
     .memory(memory)
 );
 
+/*
+
+  always @(posedge slu_strobe or posedge reset)
+  begin
+  
+  end
+*/
 
 endmodule
 

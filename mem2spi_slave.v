@@ -86,6 +86,7 @@ module mem2spi_slave
   end
 endmodule
 
+//--- Unit Tests --------------------------------------------------------------
 
 module mem2spi_slave__basics_tb();
   localparam WIDTH = 48;
